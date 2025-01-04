@@ -1,4 +1,3 @@
-
 from .visitor import Visitor
 from .grammar import get_grammar
 from .checker import get_checker

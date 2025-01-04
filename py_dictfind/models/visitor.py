@@ -7,7 +7,6 @@ from py_dictfind.logs import log
 
 
 class Visitor(NodeVisitor):
-
     # expressions
 
     def visit_expr(self, node, visited_children):
@@ -58,6 +57,7 @@ class Visitor(NodeVisitor):
 
     def visit_existence(self, node, visited_children):
         log.debug(f"existence: {node.text}")
+
         def convert_to_bool_factory(ref_func):
             def convert_to_bool(data):
                 try:
@@ -65,12 +65,15 @@ class Visitor(NodeVisitor):
                 except Exception:
                     return False
                 return True
+
             return convert_to_bool
+
         ref_func = visited_children[0]
         return convert_to_bool_factory(ref_func)
 
     def visit_comparison(self, node, visited_children):
         log.debug(f"comparison: {node.text}")
+
         def convert_to_bool_factory(comparison_func):
             def convert_to_bool(data):
                 try:
@@ -78,7 +81,9 @@ class Visitor(NodeVisitor):
                 except (KeyError, IndexError):
                     return False
                 return bool(result)
+
             return convert_to_bool
+
         comparison_func = visited_children[0]
         return convert_to_bool_factory(comparison_func)
 
@@ -99,6 +104,7 @@ class Visitor(NodeVisitor):
                 return isclose(val1, val2)
             else:
                 return val1 == val2
+
         return check_eq
 
     def visit_ne(self, node, visited_children):
@@ -114,6 +120,7 @@ class Visitor(NodeVisitor):
                     f" Value: '{val1}'. Pattern: '{val2}'."
                 )
             return bool(result)
+
         return check_regex
 
     def visit_lt(self, node, visited_children):
@@ -132,6 +139,7 @@ class Visitor(NodeVisitor):
 
     def visit_ref(self, node, visited_children):
         log.debug(f"ref: {node.text}")
+
         def lookup_function_factory(keys):
             def lookup_function(data):
                 container = data
@@ -142,7 +150,9 @@ class Visitor(NodeVisitor):
                         container = container[key]
                 element = container
                 return element
+
             return lookup_function
+
         _, head_id, other_ids = visited_children
         all_ids = [head_id] + other_ids
         return lookup_function_factory(all_ids)
@@ -191,8 +201,8 @@ class Visitor(NodeVisitor):
         return text
 
     def visit_squote_string_inner(self, node, visited_children):
-        escaped_string = ''.join(visited_children)
-        actual_string = escaped_string.replace(r"\'", "'").replace(r'\"', '"')
+        escaped_string = "".join(visited_children)
+        actual_string = escaped_string.replace(r"\'", "'").replace(r"\"", '"')
         log.debug(f"squote visited_children: {visited_children}")
         log.debug(f"squote escaped_string: {escaped_string}")
         log.debug(f"squote actual_string: {actual_string}")
@@ -207,8 +217,8 @@ class Visitor(NodeVisitor):
         return text
 
     def visit_dquote_string_inner(self, node, visited_children):
-        escaped_string = ''.join(visited_children)
-        actual_string = escaped_string.replace(r"\'", "'").replace(r'\"', '"')
+        escaped_string = "".join(visited_children)
+        actual_string = escaped_string.replace(r"\'", "'").replace(r"\"", '"')
         return actual_string
 
     def visit_dquote_string_inner_parts(self, node, visited_children):
