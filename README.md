@@ -1,5 +1,15 @@
+<p align="center">
+    <img src="https://raw.githubusercontent.com/pacha/py-dictfind/main/docs/header.png" alt="header">
+</p>
 
-# py-dictfind
+py-dictfind
+===========
+
+![Tests](https://github.com/pacha/py-dictfind/actions/workflows/tests.yaml/badge.svg)
+![Type checks](https://github.com/pacha/py-dictfind/actions/workflows/type-checks.yaml/badge.svg)
+![Code formatting](https://github.com/pacha/py-dictfind/actions/workflows/code-formatting.yaml/badge.svg)
+![Supported Python versions](https://img.shields.io/pypi/pyversions/py-dictfind.svg)
+
 
 Python package to filter a list of dictionaries based on their contents.
 
@@ -53,8 +63,24 @@ The condition is provided as a string. The condition syntax is detailed in the n
 returning `True` or `False` consequently.
 
 You can import both functions with:
-```
+```python
 from py_dictfind import find, check
+```
+
+This package can be useful for applications that need to provide users with a
+very simple syntax to express conditions in JSON or YAML configuration files.
+
+A made up example:
+
+```yaml
+environment: "dev"   # one of "prod", "stage", "dev"
+clear-cache-if: "environment != 'prod'"
+```
+
+And then, when your application reads the configuration, it can set some values by evaluating itself:
+
+```python
+config["clear-cache"] = check(config, config["clear-cache-if"])
 ```
 
 ## Syntax
